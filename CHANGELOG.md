@@ -5,6 +5,7 @@ needs a `## <version>` section here, or its build fails.
 
 ## Unreleased
 
+- Org-mode (`.org`) files can now be previewed with `⇧⌘V` or the preview button, and commented with `⌘/`.
 - **Remote SSH** connects to Windows hosts running OpenSSH Server, through the PowerShell Windows comes with.
 - A Windows host's files, Git, search and language servers work as on Linux, and its terminals open PowerShell.
 - On a Windows host, `/` lists its drives and the folder box takes `C:\Users\me` as you type it.

@@ -1118,6 +1118,8 @@ func (a *app) breadcrumbs(c *ui.Context, col *column, t *colTab) {
 			switch {
 			case isMarkdown(d.document):
 				a.markdownModeButtons(c, t, d)
+			case isOrg(d.document):
+				a.orgModeButtons(c, t, d)
 			case isJSONL(d.document):
 				a.jsonlModeButtons(c, t, d)
 			case canPreview(d.document):
@@ -1155,6 +1157,51 @@ func (a *app) previewButton(c *ui.Context, t *colTab, d *editor) {
 			}
 		})
 	}
+}
+
+// orgModeButtons choose how an Org-mode document shows: its source or its
+// Reading view, the one it shows marked.
+func (a *app) orgModeButtons(c *ui.Context, t *colTab, d *editor) {
+	p := a.pal
+	reading := d.preview != nil
+	modes := []struct {
+		on    bool
+		label string
+		icon  *ui.SVG
+	}{
+		{!reading, locales.MarkdownModeSource(), iconFileCode},
+		{reading, locales.MarkdownModeReading(), iconFileText},
+	}
+	ui.Row(c.Key("org-modes")).Height(crumbsH - 4).Padding(1).Gap(1).Radius(5).Background(p.hover.Alpha(0.5)).
+		AlignItems(ui.Center).Shrink(0).Label(locales.ShowPreview()).Children(func() {
+		for k, m := range modes {
+			label := a.withKey(m.label, "view.togglePreview")
+			b := ui.ButtonBase(c.Key("org-mode:"+strconv.Itoa(k))).Height(crumbsH-6).Padding(0, 6).Radius(4).
+				AlignItems(ui.Center).Label(label).Tooltip(label).Selected(m.on)
+			col := p.muted
+			switch {
+			case m.on:
+				// The mode shown is marked by color, not by weight, so the
+				// buttons hold still.
+				b.Background(p.editor)
+				col = p.text
+			case b.Hovered():
+				b.Background(p.hover)
+			}
+			b.Transition(hoverFade)
+			pressPose(b)
+			b.Children(func() { ui.Icon(c, m.icon).FontSize(13).TextColor(col) })
+			if b.Clicked() && !m.on {
+				a.post(func() {
+					if col, i := a.locate(t); col != nil {
+						a.activate(col, i, true)
+					}
+					a.setPreview(d, !reading)
+					a.focusColumn()
+				})
+			}
+		}
+	})
 }
 
 // markdownModeButtons choose how a Markdown document shows: its source,

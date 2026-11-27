@@ -628,7 +628,7 @@ func (a *app) setPreview(d *editor, on bool) {
 	}
 	if on {
 		d.preview = newPreviewViewer(d.document)
-		if isMarkdown(d.document) {
+		if isMarkdown(d.document) || isOrg(d.document) {
 			// It opens where the text is.
 			m := &markdownPreview{}
 			m.sync.want, m.sync.placing = a.readingPlace(d), true

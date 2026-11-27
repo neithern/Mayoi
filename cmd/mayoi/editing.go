@@ -105,7 +105,7 @@ var lineComments = map[string]string{
 	"SQL": "--", "PostgreSQL SQL dialect": "--", "MySQL": "--", "Lua": "--", "Haskell": "--", "Elm": "--",
 	"Common Lisp": ";", "Clojure": ";", "Scheme": ";", "Racket": ";", "EmacsLisp": ";", "Fennel": ";",
 	"VimL": `"`, "Erlang": "%", "TeX": "%", "MATLAB": "%", "Fortran": "!",
-	"JSON": "//", "GraphQL": "#",
+	"JSON": "//", "GraphQL": "#", "Org Mode": "#",
 }
 
 // blockComments are the comments of languages with no line comment, by

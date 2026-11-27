@@ -322,7 +322,7 @@ func isMarkdownPath(path string) bool {
 }
 
 func canPreview(d *document) bool {
-	if isSVG(d) || isMarkdown(d) || isMermaid(d) || isJSONL(d) {
+	if isSVG(d) || isMarkdown(d) || isOrg(d) || isMermaid(d) || isJSONL(d) {
 		return true
 	}
 	p, _ := previewOf(d)
@@ -799,6 +799,9 @@ func parseMarkdown(source []byte, path, root string, current func() bool, caches
 			c.code[key] = runs
 		}
 		return runs
+	}
+	if isOrgPath(path) {
+		source = orgToMarkdown(source)
 	}
 	source, skip := markdownSkipFrontMatter(source)
 	source = markdownStripComments(source)
